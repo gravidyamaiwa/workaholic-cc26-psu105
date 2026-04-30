@@ -1,116 +1,119 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-// ── Warna brand dari Figma ──────────────────────────────────────
-// Primary red  : #A20303
-// Dark red     : #7A0202
-// Light pink bg: #F9E8E8
-// Text dark    : #1A1A1A
-// ────────────────────────────────────────────────────────────────
-
+// --- DATA ---
 const features = [
   {
     title: "Rekomendasi Pekerjaan Pintar",
     desc: "Dapatkan lowongan kerja yang sesuai dengan skill dan minatmu.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10">
-        <rect x="6" y="8" width="28" height="32" rx="3" fill="#A20303" opacity=".15"/>
-        <rect x="10" y="12" width="20" height="3" rx="1.5" fill="#A20303"/>
-        <rect x="10" y="18" width="16" height="3" rx="1.5" fill="#A20303" opacity=".6"/>
-        <rect x="10" y="24" width="12" height="3" rx="1.5" fill="#A20303" opacity=".4"/>
-        <circle cx="36" cy="36" r="8" fill="#A20303"/>
-        <path d="M33 36l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
+    img: "search.png"
   },
   {
     title: "AI CV Review",
     desc: "Perbaiki CV kamu dengan saran otomatis agar lebih menarik bagi recruiter.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10">
-        <rect x="8" y="6" width="32" height="36" rx="4" fill="#A20303" opacity=".12"/>
-        <rect x="14" y="13" width="20" height="2.5" rx="1.25" fill="#A20303"/>
-        <rect x="14" y="19" width="15" height="2.5" rx="1.25" fill="#A20303" opacity=".5"/>
-        <rect x="14" y="25" width="18" height="2.5" rx="1.25" fill="#A20303" opacity=".35"/>
-        <circle cx="34" cy="34" r="7" fill="#A20303"/>
-        <path d="M31.5 34l1.5 1.5L36 32" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
+    img: "review.png"
   },
   {
     title: "Khusus Entry-Level",
     desc: "Dirancang khusus untuk fresh graduate tanpa pengalaman kerja.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10">
-        <circle cx="24" cy="18" r="8" fill="#A20303" opacity=".15"/>
-        <circle cx="24" cy="18" r="5" fill="#A20303" opacity=".5"/>
-        <path d="M12 38c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="#A20303" strokeWidth="2.5" strokeLinecap="round"/>
-        <path d="M20 42l2-4 2 4" fill="#A20303"/>
-      </svg>
-    ),
+    img: "Like.png"
   },
 ];
 
-const howItWorks = [
+const howItWorksData = [
   {
-    step: "01",
-    title: "Unggah CV",
+    id: 1,
     desc: "Unggah CV kamu dalam format PDF dengan mudah.",
   },
   {
-    step: "02",
-    title: "Analisis AI",
+    id: 2,
     desc: "Sistem akan membaca dan menganalisis skill serta pengalamanmu.",
   },
   {
-    step: "03",
-    title: "Temukan Kerja",
+    id: 3,
     desc: "Temukan pekerjaan yang sesuai dengan profilmu secara otomatis.",
-  },
+  }
 ];
 
-const jobPlaceholders = Array(6).fill(null);
+// --- COMPONENTS ---
 
-// ── NAVBAR ───────────────────────────────────────────────────────
 function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeAuth, setActiveAuth] = useState("Masuk");
+  const [activeMenu, setActiveMenu] = useState("Beranda");
+  const menus = ["Beranda", "Cari Loker", "Analisis CV"];
+
+  // Fungsi untuk mendeteksi scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#A20303] flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-              <path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9z" fill="white" opacity=".3"/>
-              <path d="M8 12l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-500 pt-0 md:pt-4">
+      <div 
+        className={`transition-all duration-500 ease-in-out flex items-center justify-between px-6 md:px-10
+          ${isScrolled 
+            ? "w-[90%] md:w-[85%] bg-white/90 backdrop-blur-lg rounded-[30px] h-16 shadow-xl border border-gray-100" 
+            : "w-full bg-white h-20 border-b border-gray-100"
+          }`}
+      >
+        
+        {/* Brand/Logo Section */}
+         <div className="flex items-center gap-8">
+          <img src="logo.png" alt="Logo" className="h-14 w-auto cursor-pointer object-contain" />
+          
+          {/* Menu Navigasi */}
+          <div className="hidden md:flex gap-1">
+            {menus.map((menu) => (
+              <button
+                key={menu}
+                onClick={() => setActiveMenu(menu)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                  activeMenu === menu 
+                    ? "text-[#8B1A1A] bg-[#FDF2F2]" 
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                }`}
+              >
+                {menu}
+              </button>
+            ))}
           </div>
-          <span className="font-bold text-[#1A1A1A] tracking-wide text-sm">WORKAHOLIC</span>
         </div>
 
-        {/* Menu */}
-        <div className="hidden md:flex items-center gap-8 text-sm text-gray-600">
-          <a href="#" className="font-medium text-[#A20303]">Beranda</a>
-          <a href="#jobs" className="hover:text-[#A20303] transition-colors">Cari Loker</a>
-          <a href="#" className="hover:text-[#A20303] transition-colors">Analisis CV</a>
-        </div>
+        {/* Action Section */}
+        <div className="flex items-center gap-6">
+          {/* Toggle Auth */}
+          <div className="flex items-center bg-gray-100 p-1 rounded-full relative w-36 h-9">
+            <div 
+              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full transition-all duration-300 shadow-sm ${
+                activeAuth === "Daftar" ? "left-[calc(50%+2px)]" : "left-1"
+              }`}
+            />
+            <button 
+              onClick={() => setActiveAuth("Masuk")} 
+              className={`flex-1 z-10 text-[12px] font-bold transition-colors ${activeAuth === "Masuk" ? "text-[#8B1A1A]" : "text-gray-500"}`}
+            >
+              Masuk
+            </button>
+            <button 
+              onClick={() => setActiveAuth("Daftar")} 
+              className={`flex-1 z-10 text-[12px] font-bold transition-colors ${activeAuth === "Daftar" ? "text-[#8B1A1A]" : "text-gray-500"}`}
+            >
+              Daftar
+            </button>
+          </div>
 
-        {/* Auth */}
-        <div className="flex items-center gap-3">
-          <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:border-[#A20303] transition-colors">
-            <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-gray-500">
-              <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          </button>
-          <button className="px-4 py-1.5 bg-[#A20303] text-white text-sm font-medium rounded-full hover:bg-[#7A0202] transition-colors">
-            Masuk
-          </button>
-          <button className="px-4 py-1.5 border border-[#A20303] text-[#A20303] text-sm font-medium rounded-full hover:bg-[#A20303] hover:text-white transition-colors">
-            Daftar
-          </button>
-          <button className="flex items-center gap-1 text-sm text-gray-500">
-            ID
-            <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3">
-              <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <button className="text-gray-400 hover:text-[#8B1A1A] transition-colors">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.963-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </button>
         </div>
@@ -119,271 +122,292 @@ function Navbar() {
   );
 }
 
-// ── HERO ─────────────────────────────────────────────────────────
-function HeroSection() {
+const Hero = () => {
   return (
-    <section className="pt-16 bg-gradient-to-br from-[#F9E8E8] via-[#FDF3F3] to-white min-h-[520px] flex items-center">
-      <div className="max-w-6xl mx-auto px-6 py-16 flex items-center justify-between gap-12">
-        {/* Text */}
-        <div className="flex-1 max-w-lg">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1A1A1A] leading-tight mb-4">
-            Mulai Karier Pertamamu<br />
-            dengan Lebih Pasti
+    <section className="pt-44 pb-24 bg-gradient-to-b from-white via-[#FDF2F2] to-[#F2D1D1] px-6 md:px-20 overflow-hidden">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-20">
+        
+        {/* Konten Teks */}
+        <div className="md:w-1/2 text-left relative z-10">
+
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 leading-[1.15] mb-8 tracking-tight">
+            Mulai Karier Pertama <br className="hidden lg:block"/> dengan Lebih Pasti
           </h1>
-          <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-sm">
-            Upload CV kamu dan biarkan AI menganalisis serta membantu menemukan
-            pekerjaan entry-level yang paling cocok dengan skill dan potensimu.
+
+          <p className="text-gray-600 text-lg md:text-xl mb-12 max-w-lg leading-relaxed font-normal">
+            Gunakan keunggulan AI untuk menganalisis CV dan temukan peluang kerja <span className="text-[#8B1A1A] font-semibold">entry-level</span> yang paling presisi dengan bakatmu.
           </p>
-          <div className="flex gap-3 flex-wrap">
-            <button className="px-6 py-3 bg-[#A20303] text-white font-semibold rounded-lg hover:bg-[#7A0202] transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm">
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button className="px-10 py-4 bg-[#8B1A1A] text-white font-bold text-sm rounded-xl shadow-[0_10px_20px_-5px_rgba(139,26,26,0.4)] hover:bg-[#701515] transition-all transform hover:-translate-y-1">
               Upload CV Sekarang
             </button>
-            <button className="px-6 py-3 bg-[#F9E8E8] text-[#A20303] font-semibold rounded-lg hover:bg-[#f0d0d0] transition-all text-sm border border-[#e8c0c0]">
+            <button className="px-10 py-4 bg-white/50 backdrop-blur-sm text-[#8B1A1A] border border-[#D9A7A7] font-bold text-sm rounded-xl hover:bg-white transition-all transform hover:-translate-y-1">
               Lihat Lowongan
             </button>
           </div>
-        </div>
 
-        {/* Ilustrasi */}
-        <div className="hidden md:flex flex-1 justify-center">
-          <div className="w-80 h-72 bg-gradient-to-br from-[#F0D0D0] to-[#F9E8E8] rounded-2xl flex items-center justify-center relative overflow-hidden">
-            <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-[#A20303] opacity-10"></div>
-            <div className="absolute bottom-8 left-6 w-10 h-10 rounded-full bg-[#A20303] opacity-15"></div>
-            <svg viewBox="0 0 200 180" fill="none" className="w-64 h-56">
-              <rect x="30" y="130" width="140" height="8" rx="4" fill="#A20303" opacity=".2"/>
-              <rect x="50" y="138" width="8" height="30" rx="4" fill="#A20303" opacity=".15"/>
-              <rect x="142" y="138" width="8" height="30" rx="4" fill="#A20303" opacity=".15"/>
-              <rect x="55" y="75" width="90" height="58" rx="6" fill="#A20303" opacity=".15"/>
-              <rect x="60" y="80" width="80" height="48" rx="4" fill="#A20303" opacity=".25"/>
-              <rect x="65" y="85" width="70" height="38" rx="3" fill="white" opacity=".6"/>
-              <rect x="70" y="90" width="30" height="4" rx="2" fill="#A20303" opacity=".4"/>
-              <rect x="70" y="97" width="50" height="3" rx="1.5" fill="#A20303" opacity=".2"/>
-              <rect x="70" y="103" width="40" height="3" rx="1.5" fill="#A20303" opacity=".2"/>
-              <rect x="95" y="133" width="10" height="12" rx="2" fill="#A20303" opacity=".2"/>
-              <rect x="80" y="144" width="40" height="5" rx="2.5" fill="#A20303" opacity=".15"/>
-              <circle cx="148" cy="68" r="16" fill="#A20303" opacity=".2"/>
-              <circle cx="148" cy="62" r="9" fill="#A20303" opacity=".4"/>
-              <path d="M134 95c0-7.732 6.268-14 14-14h1c7.732 0 14 6.268 14 14v35h-29V95z" fill="#A20303" opacity=".25"/>
-              <ellipse cx="148" cy="130" rx="18" ry="6" fill="#A20303" opacity=".15"/>
-            </svg>
-            {/* Badge notif */}
-            <div className="absolute top-3 left-3 bg-white rounded-xl shadow-md px-3 py-2 flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-green-400 flex items-center justify-center">
-                <svg viewBox="0 0 12 12" fill="none" className="w-3 h-3">
-                  <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <span className="text-xs font-semibold text-gray-700">CV Dianalisis!</span>
-            </div>
+          {/* Statistik Singkat - Opsional untuk menambah kredibilitas */}
+          <div className="mt-12 flex items-center gap-8 border-t border-gray-200/50 pt-8">
           </div>
         </div>
+
+        {/* Gambar/Ilustrasi */}
+        <div className="md:w-1/2 flex justify-center relative">
+          {/* Elemen dekoratif di belakang gambar */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/30 rounded-full blur-3xl -z-10"></div>
+          <img 
+            src="hero.png" 
+            alt="Hero Illustration" 
+            className="w-full max-w-lg drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] object-contain" 
+          />
+        </div>
+
       </div>
     </section>
   );
-}
+};
 
-// ── FITUR ────────────────────────────────────────────────────────
-function FeaturesSection() {
+const FeaturesSection = () => (
+  <section className="bg-gradient-to-b from-[#F2D1D1] to-[#D9A7A7] pb-32">
+    {/* Header Section dengan penyesuaian ukuran teks */}
+    <div className="bg-white py-12 mb-20 shadow-sm flex justify-center items-center border-b border-gray-100">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-[#8B1A1A] tracking-tight">
+        Fitur Unggulan untuk Kariermu
+      </h2>
+    </div>
+
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        {features.map((f, i) => (
+          <div 
+            key={i} 
+            className="bg-white rounded-[40px] p-10 shadow-xl flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2"
+          >
+            {/* Judul Kartu: Menggunakan font-bold (bukan black) agar lebih elegan */}
+            <h3 className="text-xl md:text-2xl font-bold text-[#8B1A1A] mb-8 min-h-[80px] flex items-center tracking-tight">
+              {f.title}
+            </h3>
+
+            {/* Container Gambar */}
+            <div className="w-28 h-28 flex items-center justify-center">
+              <img src={f.img} alt={f.title} className="w-full h-full object-contain" />
+            </div>
+
+            {/* Deskripsi: Menggunakan font-normal/medium untuk keterbacaan tinggi */}
+            <p className="text-gray-600 text-base font-medium leading-relaxed px-2">
+              {f.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const HowItWorks = () => {
+  const [active, setActive] = useState(0);
+
+  const nextSlide = () => {
+    setActive((prev) => (prev === howItWorksData.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setActive((prev) => (prev === 0 ? howItWorksData.length - 1 : prev - 1));
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => { setActive((prev) => (prev === howItWorksData.length - 1 ? 0 : prev + 1)); }, 5000); 
+    return () => clearInterval(timer); }, []); // kosong karena pakai functional update
+
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-[#1A1A1A] mb-12">
-          Fitur Unggulan untuk Kariemu
-        </h2>
-        <div className="bg-gradient-to-br from-[#F9E8E8] to-[#FDF3F3] rounded-3xl p-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-50"
-              >
-                <div className="mb-4">{f.icon}</div>
-                <h3 className="font-bold text-[#A20303] text-base mb-3 leading-tight">
-                  {f.title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-              </div>
+    <section className="bg-[#D9A7A7] pt-20">
+      <div className="bg-white rounded-t-[100px] md:rounded-t-[180px] pt-16 pb-20 w-full shadow-lg">
+        
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Judul: Diubah ke font-extrabold dengan warna gray-900 agar lebih elegan */}
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center mb-16 tracking-tight">
+            Bagaimana Workaholic Membantumu?
+          </h2>
+
+          <div className="relative flex items-center justify-center">
+            {/* Tombol Navigasi */}
+            <button 
+              onClick={prevSlide}
+              className="absolute -left-2 md:-left-8 p-3 rounded-full bg-[#FDF2F2] text-[#8B1A1A] hover:bg-[#8B1A1A] hover:text-white transition-all shadow-sm z-10"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+
+            {/* Slide Card: Teks deskripsi diubah dari font-medium ke font-semibold agar tetap terbaca jelas di latar gelap */}
+            <div className="w-full max-w-4xl bg-[#8B1A1A] rounded-[48px] p-12 md:p-20 text-center text-white min-h-[280px] flex items-center justify-center shadow-2xl transition-all duration-500">
+              <p className="text-lg md:text-2xl font-semibold leading-relaxed tracking-wide" key={active}>
+                {howItWorksData[active].desc}
+              </p>
+            </div>
+
+            <button 
+              onClick={nextSlide}
+              className="absolute -right-2 md:-right-8 p-3 rounded-full bg-[#FDF2F2] text-[#8B1A1A] hover:bg-[#8B1A1A] hover:text-white transition-all shadow-sm z-10"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Indikator Titik */}
+          <div className="flex justify-center gap-3 mt-12">
+            {howItWorksData.map((_, i) => (
+              <button 
+                key={i} 
+                onClick={() => setActive(i)} 
+                className={`h-2 transition-all duration-300 rounded-full ${active === i ? "w-10 bg-[#8B1A1A]" : "w-2 bg-gray-200"}`} 
+              />
             ))}
           </div>
         </div>
       </div>
     </section>
   );
-}
+};
 
-// ── HOW IT WORKS ─────────────────────────────────────────────────
-function HowItWorksSection() {
-  const [active, setActive] = useState(0);
-
-  return (
-    <section className="py-16 bg-white">
-      <div className="max-w-3xl mx-auto px-6 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#1A1A1A] mb-10">
-          Bagaimana Workaholic Membantumu?
+const JobGrid = () => (
+  <section className="bg-[#8B1A1A] relative z-10">
+    <div className="w-full bg-white rounded-b-[100px] md:rounded-b-[180px] pt-10 pb-24 shadow-2xl">
+      <div className="max-w-6xl mx-auto px-6">
+        
+        {/* Judul: Diubah ke font-extrabold dengan warna gray-900 agar lebih elegan */}
+        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center mb-12 tracking-tight">
+          Lowongan untuk Kamu
         </h2>
 
-        {/* Card */}
-        <div className="bg-[#A20303] rounded-3xl p-10 md:p-14 text-white min-h-[200px] flex flex-col items-center justify-center shadow-lg transition-all duration-300">
-          <div className="text-6xl font-black opacity-20 mb-2 leading-none">
-            {howItWorks[active].step}
+        {/* Filter Dropdowns: Tipografi diperkecil untuk kesan teknis yang rapi */}
+        <div className="flex justify-end gap-4 mb-12">
+          <div className="relative">
+            <select className="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 px-6 pr-10 text-[13px] font-semibold text-gray-600 focus:outline-none focus:border-[#8B1A1A] focus:ring-1 focus:ring-[#8B1A1A] shadow-sm cursor-pointer transition-all">
+              <option>Tipe Kerja</option>
+              <option>Full-time</option>
+              <option>Part-time</option>
+              <option>Remote</option>
+              <option>Internship</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </div>
           </div>
-          <h3 className="text-xl font-bold mb-3">{howItWorks[active].title}</h3>
-          <p className="text-white/80 text-base max-w-xs leading-relaxed">
-            {howItWorks[active].desc}
-          </p>
+
+          <div className="relative">
+            <select className="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 px-6 pr-10 text-[13px] font-semibold text-gray-600 focus:outline-none focus:border-[#8B1A1A] focus:ring-1 focus:ring-[#8B1A1A] shadow-sm cursor-pointer transition-all">
+              <option>Semua Pendidikan</option>
+              <option>SMA/SMK</option>
+              <option>D3</option>
+              <option>S1</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </div>
+          </div>
         </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-6">
-          {howItWorks.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === active ? "bg-[#A20303] w-8" : "bg-gray-300 w-2"
-              }`}
-            />
+        {/* Grid Kartu: Placeholder dengan border yang lebih halus */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {Array(6).fill(0).map((_, i) => (
+            <div 
+              key={i} 
+              className="aspect-square bg-gray-50 rounded-[32px] border border-gray-100 shadow-inner hover:bg-gray-100 transition-colors duration-300"
+            ></div>
           ))}
         </div>
 
-        {/* Arrows */}
-        <div className="flex justify-center gap-3 mt-4">
-          <button
-            onClick={() =>
-              setActive((p) => (p === 0 ? howItWorks.length - 1 : p - 1))
-            }
-            className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:border-[#A20303] hover:text-[#A20303] transition-colors text-gray-400"
-          >
-            <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4">
-              <path d="M10 4l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button
-            onClick={() =>
-              setActive((p) => (p === howItWorks.length - 1 ? 0 : p + 1))
-            }
-            className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:border-[#A20303] hover:text-[#A20303] transition-colors text-gray-400"
-          >
-            <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4">
-              <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Navigasi Bawah: Teks lebih ramping dan modern */}
+        <div className="text-center mt-16">
+          <button className="text-sm font-bold text-gray-900 hover:text-[#8B1A1A] flex items-center gap-2 mx-auto transition-all group">
+            Lihat lebih banyak 
+            <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </button>
         </div>
       </div>
-    </section>
-  );
-}
+    </div>
+  </section>
+);
 
-// ── JOB LISTING PREVIEW ──────────────────────────────────────────
-function JobListingSection() {
-  return (
-    <section id="jobs" className="py-8 bg-white">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Filter */}
-        <div className="flex justify-end gap-3 mb-6">
-          <select className="px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 bg-white focus:outline-none focus:border-[#A20303] cursor-pointer">
-            <option>Tipe Kerja</option>
-            <option>Full-time</option>
-            <option>Part-time</option>
-            <option>Remote</option>
-            <option>Internship</option>
-          </select>
-          <select className="px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 bg-white focus:outline-none focus:border-[#A20303] cursor-pointer">
-            <option>Semua Pendidikan</option>
-            <option>SMA/SMK</option>
-            <option>D3</option>
-            <option>S1</option>
-          </select>
+const CTA = () => (
+  /* Menggunakan margin-top negatif yang halus dan padding yang luas untuk kenyamanan visual */
+  <section className="py-28 bg-[#8B1A1A] text-center text-white px-6 -mt-20 relative z-0">
+    <div className="max-w-4xl mx-auto pt-16">
+      {/* Judul: Menggunakan font-extrabold dan tracking-tight agar terlihat solid namun elegan */}
+      <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight leading-tight">
+        Siap Memulai Kariermu?
+      </h2>
+      
+      {/* Deskripsi: Menggunakan font-medium (bukan bold) agar teks panjang lebih mudah dibaca */}
+      <p className="mb-12 text-lg md:text-xl font-medium opacity-90 leading-relaxed max-w-2xl mx-auto">
+        Upload CV sekarang dan temukan pekerjaan yang paling tepat untuk potensi unikmu.
+      </p>
+      
+      {/* Tombol: Menggunakan font-bold dengan ukuran teks yang proporsional */}
+      <button className="px-12 py-4 bg-[#D9A7A7] text-[#8B1A1A] font-bold text-base rounded-xl shadow-xl transition-all hover:bg-[#C89696] hover:scale-105 active:scale-95">
+        Upload CV Sekarang
+      </button>
+    </div>
+  </section>
+);
+
+const Footer = () => (
+  <footer className="w-full">
+    {/* Section Navigasi: Menggunakan warna pink kemerahan lembut sesuai gambar */}
+    <div className="bg-[#D9A7A7] py-10 px-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+        
+        {/* Logo Section */}
+        <div className="flex flex-col items-center">
+          <img src="logo.png" alt="Workaholic Logo" className="h-20 mb-1" />
         </div>
 
-        {/* Grid card */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {jobPlaceholders.map((_, i) => (
-            <div
-              key={i}
-              className="bg-gray-50 rounded-2xl p-5 border border-gray-100 hover:border-[#A20303]/30 hover:shadow-md transition-all cursor-pointer group"
+        {/* Navigation Links: Teks Merah Marun di atas background pink */}
+        <nav className="flex flex-wrap justify-center gap-8 md:gap-16">
+          {['Lowongan', 'Upload CV', 'Analisis', 'Wishlist'].map((item) => (
+            <a 
+              key={item} 
+              href={`#${item.toLowerCase().replace(' ', '-')}`}
+              className="text-[#8B1A1A] font-bold text-base hover:opacity-70 transition-opacity"
             >
-              <div className="w-10 h-10 rounded-xl bg-gray-200 mb-4 group-hover:bg-[#F9E8E8] transition-colors"></div>
-              <div className="h-3.5 bg-gray-200 rounded-full mb-2 w-3/4"></div>
-              <div className="h-3 bg-gray-100 rounded-full mb-1 w-1/2"></div>
-              <div className="h-3 bg-gray-100 rounded-full w-2/3 mb-4"></div>
-              <div className="flex gap-2">
-                <div className="h-6 w-16 bg-gray-100 rounded-full"></div>
-                <div className="h-6 w-14 bg-gray-100 rounded-full"></div>
-              </div>
-            </div>
+              {item}
+            </a>
           ))}
-        </div>
-
-        <div className="text-center">
-          <button className="text-sm text-[#A20303] font-medium hover:underline">
-            Lihat lebih banyak →
-          </button>
-        </div>
+        </nav>
       </div>
-    </section>
-  );
-}
+    </div>
 
-// ── CTA SECTION ──────────────────────────────────────────────────
-function CTASection() {
-  return (
-    <section className="py-16 bg-gradient-to-r from-[#A20303] to-[#7A0202]">
-      <div className="max-w-3xl mx-auto px-6 text-center text-white">
-        <h2 className="text-2xl md:text-3xl font-bold mb-3">
-          Siap Memulai Kariermu?
-        </h2>
-        <p className="text-white/80 text-base mb-8">
-          Upload CV sekarang dan temukan pekerjaan yang tepat untukmu.
-        </p>
-        <button className="px-8 py-3 bg-white text-[#A20303] font-bold rounded-full hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm">
-          Upload CV Sekarang
-        </button>
-      </div>
-    </section>
-  );
-}
-
-// ── FOOTER ───────────────────────────────────────────────────────
-function Footer() {
-  return (
-    <footer className="bg-[#1A0000] text-white py-10">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[#A20303] flex items-center justify-center">
-              <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
-                <path d="M8 12l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="font-bold tracking-wide text-sm">WORKAHOLIC</span>
-          </div>
-          <div className="flex items-center gap-8 text-sm text-white/60">
-            <a href="#" className="hover:text-white transition-colors">Lowongan</a>
-            <a href="#" className="hover:text-white transition-colors">Upload CV</a>
-            <a href="#" className="hover:text-white transition-colors">Analisis</a>
-            <a href="#" className="hover:text-white transition-colors">Wishlist</a>
-          </div>
-        </div>
-        <div className="border-t border-white/10 pt-6 text-center text-xs text-white/40">
+    {/* Section Copyright: Putih Bersih sesuai keinginanmu */}
+    <div className="bg-white py-4 border-t border-gray-200 shadow-inner">
+      <div className="max-w-7xl mx-auto text-center">
+        <p className="text-black font-bold text-[13px] tracking-tight">
           © 2026 Workaholic. All rights reserved.
-        </div>
+        </p>
       </div>
-    </footer>
-  );
-}
+    </div>
+  </footer>
+);
 
-// ── MAIN EXPORT ──────────────────────────────────────────────────
 export default function LandingPage() {
   return (
-    <div className="font-sans antialiased">
+    <div className="font-sans antialiased bg-white selection:bg-[#8B1A1A] selection:text-white">
       <Navbar />
-      <HeroSection />
-      <FeaturesSection />
-      <HowItWorksSection />
-      <JobListingSection />
-      <CTASection />
+      <main>
+        <Hero />
+        <FeaturesSection />
+        <HowItWorks />
+        <JobGrid />
+        <CTA />
+      </main>
       <Footer />
     </div>
   );
 }
+
