@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+
 
 // --- DATA ---
 const features = [
@@ -35,93 +39,6 @@ const howItWorksData = [
 ];
 
 // --- COMPONENTS ---
-
-function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeAuth, setActiveAuth] = useState("Masuk");
-  const [activeMenu, setActiveMenu] = useState("Beranda");
-  const menus = ["Beranda", "Cari Loker", "Analisis CV"];
-
-  // Fungsi untuk mendeteksi scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-500 pt-0 md:pt-4">
-      <div 
-        className={`transition-all duration-500 ease-in-out flex items-center justify-between px-6 md:px-10
-          ${isScrolled 
-            ? "w-[90%] md:w-[85%] bg-white/90 backdrop-blur-lg rounded-[30px] h-16 shadow-xl border border-gray-100" 
-            : "w-full bg-white h-20 border-b border-gray-100"
-          }`}
-      >
-        
-        {/* Brand/Logo Section */}
-         <div className="flex items-center gap-8">
-          <img src="logo.png" alt="Logo" className="h-14 w-auto cursor-pointer object-contain" />
-          
-          {/* Menu Navigasi */}
-          <div className="hidden md:flex gap-1">
-            {menus.map((menu) => (
-              <button
-                key={menu}
-                onClick={() => setActiveMenu(menu)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                  activeMenu === menu 
-                    ? "text-[#8B1A1A] bg-[#FDF2F2]" 
-                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                }`}
-              >
-                {menu}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Action Section */}
-        <div className="flex items-center gap-6">
-          {/* Toggle Auth */}
-          <div className="flex items-center bg-gray-100 p-1 rounded-full relative w-36 h-9">
-            <div 
-              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full transition-all duration-300 shadow-sm ${
-                activeAuth === "Daftar" ? "left-[calc(50%+2px)]" : "left-1"
-              }`}
-            />
-            <button 
-              onClick={() => setActiveAuth("Masuk")} 
-              className={`flex-1 z-10 text-[12px] font-bold transition-colors ${activeAuth === "Masuk" ? "text-[#8B1A1A]" : "text-gray-500"}`}
-            >
-              Masuk
-            </button>
-            <button 
-              onClick={() => setActiveAuth("Daftar")} 
-              className={`flex-1 z-10 text-[12px] font-bold transition-colors ${activeAuth === "Daftar" ? "text-[#8B1A1A]" : "text-gray-500"}`}
-            >
-              Daftar
-            </button>
-          </div>
-
-          <button className="text-gray-400 hover:text-[#8B1A1A] transition-colors">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.963-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
 const Hero = () => {
   return (
     <section className="pt-44 pb-24 bg-gradient-to-b from-white via-[#FDF2F2] to-[#F2D1D1] px-6 md:px-20 overflow-hidden">
@@ -184,7 +101,7 @@ const FeaturesSection = () => (
             key={i} 
             className="bg-white rounded-[40px] p-10 shadow-xl flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2"
           >
-            {/* Judul Kartu: Menggunakan font-bold (bukan black) agar lebih elegan */}
+            {/* Judul Kartu */}
             <h3 className="text-xl md:text-2xl font-bold text-[#8B1A1A] mb-8 min-h-[80px] flex items-center tracking-tight">
               {f.title}
             </h3>
@@ -194,7 +111,7 @@ const FeaturesSection = () => (
               <img src={f.img} alt={f.title} className="w-full h-full object-contain" />
             </div>
 
-            {/* Deskripsi: Menggunakan font-normal/medium untuk keterbacaan tinggi */}
+            {/* Deskripsi */}
             <p className="text-gray-600 text-base font-medium leading-relaxed px-2">
               {f.desc}
             </p>
@@ -225,7 +142,7 @@ const HowItWorks = () => {
       <div className="bg-white rounded-t-[100px] md:rounded-t-[180px] pt-16 pb-20 w-full shadow-lg">
         
         <div className="max-w-6xl mx-auto px-6">
-          {/* Judul: Diubah ke font-extrabold dengan warna gray-900 agar lebih elegan */}
+          {/* Judul */}
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center mb-16 tracking-tight">
             Bagaimana Workaholic Membantumu?
           </h2>
@@ -241,7 +158,7 @@ const HowItWorks = () => {
               </svg>
             </button>
 
-            {/* Slide Card: Teks deskripsi diubah dari font-medium ke font-semibold agar tetap terbaca jelas di latar gelap */}
+            {/* Slide Card */}
             <div className="w-full max-w-4xl bg-[#8B1A1A] rounded-[48px] p-12 md:p-20 text-center text-white min-h-[280px] flex items-center justify-center shadow-2xl transition-all duration-500">
               <p className="text-lg md:text-2xl font-semibold leading-relaxed tracking-wide" key={active}>
                 {howItWorksData[active].desc}
@@ -279,12 +196,12 @@ const JobGrid = () => (
     <div className="w-full bg-white rounded-b-[100px] md:rounded-b-[180px] pt-10 pb-24 shadow-2xl">
       <div className="max-w-6xl mx-auto px-6">
         
-        {/* Judul: Diubah ke font-extrabold dengan warna gray-900 agar lebih elegan */}
+        {/* Judul */}
         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center mb-12 tracking-tight">
           Lowongan untuk Kamu
         </h2>
 
-        {/* Filter Dropdowns: Tipografi diperkecil untuk kesan teknis yang rapi */}
+        {/* Filter Dropdowns */}
         <div className="flex justify-end gap-4 mb-12">
           <div className="relative">
             <select className="appearance-none bg-white border border-gray-200 rounded-xl py-2.5 px-6 pr-10 text-[13px] font-semibold text-gray-600 focus:outline-none focus:border-[#8B1A1A] focus:ring-1 focus:ring-[#8B1A1A] shadow-sm cursor-pointer transition-all">
@@ -312,7 +229,7 @@ const JobGrid = () => (
           </div>
         </div>
 
-        {/* Grid Kartu: Placeholder dengan border yang lebih halus */}
+        {/* Grid Kartu */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {Array(6).fill(0).map((_, i) => (
             <div 
@@ -322,7 +239,7 @@ const JobGrid = () => (
           ))}
         </div>
 
-        {/* Navigasi Bawah: Teks lebih ramping dan modern */}
+        {/* Navigasi Bawah */}
         <div className="text-center mt-16">
           <button className="text-sm font-bold text-gray-900 hover:text-[#8B1A1A] flex items-center gap-2 mx-auto transition-all group">
             Lihat lebih banyak 
@@ -337,20 +254,19 @@ const JobGrid = () => (
 );
 
 const CTA = () => (
-  /* Menggunakan margin-top negatif yang halus dan padding yang luas untuk kenyamanan visual */
   <section className="py-28 bg-[#8B1A1A] text-center text-white px-6 -mt-20 relative z-0">
     <div className="max-w-4xl mx-auto pt-16">
-      {/* Judul: Menggunakan font-extrabold dan tracking-tight agar terlihat solid namun elegan */}
+      {/* Judul */}
       <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight leading-tight">
         Siap Memulai Kariermu?
       </h2>
       
-      {/* Deskripsi: Menggunakan font-medium (bukan bold) agar teks panjang lebih mudah dibaca */}
+      {/* Deskripsi */}
       <p className="mb-12 text-lg md:text-xl font-medium opacity-90 leading-relaxed max-w-2xl mx-auto">
         Upload CV sekarang dan temukan pekerjaan yang paling tepat untuk potensi unikmu.
       </p>
       
-      {/* Tombol: Menggunakan font-bold dengan ukuran teks yang proporsional */}
+      {/* Tombol */}
       <button className="px-12 py-4 bg-[#D9A7A7] text-[#8B1A1A] font-bold text-base rounded-xl shadow-xl transition-all hover:bg-[#C89696] hover:scale-105 active:scale-95">
         Upload CV Sekarang
       </button>
@@ -358,47 +274,11 @@ const CTA = () => (
   </section>
 );
 
-const Footer = () => (
-  <footer className="w-full">
-    {/* Section Navigasi: Menggunakan warna pink kemerahan lembut sesuai gambar */}
-    <div className="bg-[#D9A7A7] py-10 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-        
-        {/* Logo Section */}
-        <div className="flex flex-col items-center">
-          <img src="logo.png" alt="Workaholic Logo" className="h-20 mb-1" />
-        </div>
-
-        {/* Navigation Links: Teks Merah Marun di atas background pink */}
-        <nav className="flex flex-wrap justify-center gap-8 md:gap-16">
-          {['Lowongan', 'Upload CV', 'Analisis', 'Wishlist'].map((item) => (
-            <a 
-              key={item} 
-              href={`#${item.toLowerCase().replace(' ', '-')}`}
-              className="text-[#8B1A1A] font-bold text-base hover:opacity-70 transition-opacity"
-            >
-              {item}
-            </a>
-          ))}
-        </nav>
-      </div>
-    </div>
-
-    {/* Section Copyright: Putih Bersih sesuai keinginanmu */}
-    <div className="bg-white py-4 border-t border-gray-200 shadow-inner">
-      <div className="max-w-7xl mx-auto text-center">
-        <p className="text-black font-bold text-[13px] tracking-tight">
-          © 2026 Workaholic. All rights reserved.
-        </p>
-      </div>
-    </div>
-  </footer>
-);
 
 export default function LandingPage() {
   return (
     <div className="font-sans antialiased bg-white selection:bg-[#8B1A1A] selection:text-white">
-      <Navbar />
+      <Navbar fixed />
       <main>
         <Hero />
         <FeaturesSection />

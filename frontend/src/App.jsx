@@ -1,28 +1,21 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Import halaman (akan dibuat setelah ini)
-import LandingPage from './pages/LandingPage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import UploadCVPage from './pages/UploadCVPage'
-import DashboardPage from './pages/DashboardPage'
-import CVReviewPage from './pages/CVReviewPage'
-import WishlistPage from './pages/WishlistPage'
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/upload" element={<UploadCVPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/cv-review" element={<CVReviewPage />} />
-        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Routes>
-    </Router>
-  )
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
